@@ -54,4 +54,23 @@ requestfileData = api_rest.model('RequestFileData', {
 })
 
 
+requestBID_files = api_rest.model('RequestBID', {
+    'id': fields.Integer,
+    'request_id': fields.Integer,
+    'user_id': fields.Integer,
+    'delivery_time': fields.DateTime,
+    'price': fields.Float,
+    'description' : fields.String,
+    'user' : fields.Raw(),
+    'updated_at': fields.String,
+    'created_at': fields.String,
+})
+
+
+requestBIDData = api_rest.model('requestBIDData', {
+    'success': fields.Boolean,
+    'token': fields.String,
+    'data': fields.List(fields.Nested(requestfile_files)),
+})
+
 

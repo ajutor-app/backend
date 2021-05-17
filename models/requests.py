@@ -174,6 +174,16 @@ class RequestBids(db.Model):
 	def expert(self):
 		return User.query.get(self.user_id)
 
+	def update_from_dict(self, args):
+		for arg, value in args.items():
+			if args.get(arg) is not None:
+				try:
+					setattr(self, arg, value)
+				except:pass
+
+		self.updated_at = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+		self.save()
+		
 	def save(self):
 		db.session.add(self)
 		db.session.commit()
@@ -191,55 +201,6 @@ class RequestBids(db.Model):
 			price=self.price,
 			description=self.description,
 			user=self.user.to_json(),
-			updated_at=self.updated_at,
-			created_at=self.created_at,
-		)
-
-
-
-class RequestAward(db.Model):
-	__tablename__ = 'request_award'
-
-	REASON_CHANGED_MIND = 'changed_mind'
-	REASON_CANNOT_DO_JOB = 'cannot_do_job'
-	REASON_NOT_AGREE_ON_PRICE = 'not_agree_on_price'
-	REASON_NOT_RESPONDING = 'not_responding'
-	REASON_AWARDED_BY_ACCIDENT = 'awarded_by_accident'
-	REASON_ANOTHER = 'another'
-
-	REVOKE_REASONS = (
-		(REASON_CHANGED_MIND, 'I have changed my mind'),
-		(REASON_CANNOT_DO_JOB, 'Expert cannot do the job'),
-		(REASON_NOT_AGREE_ON_PRICE, 'We could not agree on price'),
-		(REASON_NOT_RESPONDING, 'expert is not responding'),
-		(REASON_AWARDED_BY_ACCIDENT, 'Awarded by accident'),
-		(REASON_ANOTHER, 'Another reason')
-	)
-
-	id = db.Column('id', db.Integer, primary_key=True)
-	request_id = db.Column(db.Integer, db.ForeignKey('requests.request_id'), nullable=False)
-	request_bid_id = db.Column(db.Integer, db.ForeignKey('request_bids.request_bid_id'), nullable=False)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
-	revoked = db.Column(db.Boolean, default=False, nullable=False)
-	revoke_reason = db.Column(ChoiceType(REVOKE_REASONS))
-	revoke_custom_reason = db.Column(db.Text)
-
-	updated_at = db.Column(db.DateTime)
-	created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-	def __repr__(self):
-		return '<RequestAward %d>' % self.id
-
-	def to_json(self):
-		return dict(
-			id=self.id,
-			request_id=self.request_id,
-			request_bid_id=self.request_bid_id,
-			user_id=self.user_id,
-			revoked=self.revoked,
-			revoke_reason=self.revoke_reason,
-			revoke_custom_reason=self.revoke_custom_reason,
 			updated_at=self.updated_at,
 			created_at=self.created_at,
 		)
