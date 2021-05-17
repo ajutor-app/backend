@@ -4,8 +4,8 @@ from flask_admin import Admin as AdminPanel
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from admin import MyAdminIndexView, UserView
-from models import User, db
+from admin import MyAdminIndexView, UserView, RequestView, RequestSkillsView, RequestFileView, SkillsView, RequestBidsView
+from models import User, db, Request, RequestSkills, RequestFile, Skills, RequestBids
 from flask_admin.menu import MenuLink
 import werkzeug
 werkzeug.cached_property = werkzeug.utils.cached_property
@@ -103,6 +103,11 @@ def load_user(id):
 if os.getenv('ADMIN_PANEL', True):
 	admin_ext = AdminPanel(app, url='/admin', index_view=MyAdminIndexView(), name='admin', template_mode='bootstrap3', endpoint="admin")
 	admin_ext.add_view(UserView(User, db.session, endpoint='users', name='Users', category='Users'))
+	admin_ext.add_view(RequestView(Request, db.session, endpoint='requests', name='Requests', category='Requests'))
+	admin_ext.add_view(RequestSkillsView(RequestSkills, db.session, endpoint='requests-skills', name='Request Skills', category='Requests'))
+	admin_ext.add_view(RequestFileView(RequestFile, db.session, endpoint='requests-files', name='Request Files', category='Requests'))
+	admin_ext.add_view(RequestBidsView(RequestBids, db.session, endpoint='requests-bids', name='Request Bids', category='Requests'))
+	admin_ext.add_view(SkillsView(Skills, db.session, endpoint='skills', name='Skills', category='Skills'))
 	admin_ext.add_link(MenuLink(name='WEBSITE', url="https://ajutor.app"))
 
 

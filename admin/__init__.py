@@ -19,3 +19,23 @@ class MyAdminIndexView(AdminIndexView):
 
 class UserView(ModelView):
 	pass
+
+class RequestView(ModelView):
+	pass
+
+class RequestSkillsView(ModelView):
+	pass
+
+class RequestFileView(ModelView):
+	pass
+
+class SkillsView(ModelView):
+	pass
+
+class RequestBidsView(ModelView):
+	pass
+
+
+
+
+
