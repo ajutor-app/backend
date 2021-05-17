@@ -3,7 +3,8 @@ from .db import db
 from sqlalchemy_utils.types.json import JSONType
 from sqlalchemy_utils.types.choice import ChoiceType
 from datetime import datetime, timedelta
-from . import User
+from .users import User
+from .skills import Skills
 
 
 PAYMENT_TYPES = (
@@ -91,7 +92,7 @@ class RequestSkills(db.Model):
 
 	id = db.Column('id', db.Integer, primary_key=True)
 	request_id = db.Column(db.Integer, db.ForeignKey('requests.request_id'), nullable=False)
-	skill_id = db.Column(db.Integer, db.ForeignKey('skills.id'), nullable=False)
+	skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'), nullable=False)
 
 	def __repr__(self):
 		return '<RequestSkills %r>' % self.id

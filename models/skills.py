@@ -4,7 +4,7 @@ from .db import db
 class Skills(db.Model):
     __tablename__ = 'skills'
 
-    id = db.Column('id', db.Integer, primary_key=True)
+    id = db.Column('skill_id', db.Integer, primary_key=True)
     skill_name = db.Column(db.String(20), nullable=False, unique=True)
 
     @staticmethod
