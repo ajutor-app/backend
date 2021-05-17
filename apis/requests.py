@@ -194,6 +194,8 @@ class RequestsBidAPI(SecureResource):
 class RequestBidAPI(SecureResource):
 	@api_rest.doc(model=requestBID_files)
 	def get(self, request_bid_id):
+		''' get details request_bid_id '''
+		
 		item = RequestBids.query.filter_by(id=request_bid_id).first()
 		if not item:
 			return abort(404, "request_bid_id not found")

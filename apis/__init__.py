@@ -59,5 +59,7 @@ api_rest.add_namespace(auth_api)
 from .requests import api_rest as requests_api
 api_rest.add_namespace(requests_api)
 
+from .bids import api_rest as bids_api
+api_rest.add_namespace(bids_api)
 
 
