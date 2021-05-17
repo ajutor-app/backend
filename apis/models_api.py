@@ -19,3 +19,39 @@ loginData = api_rest.model('LoginData', {
     'token': fields.String,
     'data': fields.List(fields.Nested(user_files)),
 })
+
+
+request_files = api_rest.model('Request', {
+    'id': fields.Integer,
+    'user_id': fields.String,
+    'title': fields.String,
+    'description': fields.String,
+    'skills': fields.Raw(),
+    'files':fields.Raw(),
+    'updated_at': fields.String,
+    'created_at': fields.String,
+})
+
+requestsData = api_rest.model('RequestData', {
+    'success': fields.Boolean,
+    'token': fields.String,
+    'data': fields.List(fields.Nested(request_files)),
+})
+
+requestfile_files = api_rest.model('Request', {
+    'id': fields.Integer,
+    'filename': fields.String,
+    'attachment_id': fields.String,
+    'url': fields.String,
+    'created_at': fields.String,
+})
+
+
+requestfileData = api_rest.model('RequestFileData', {
+    'success': fields.Boolean,
+    'token': fields.String,
+    'data': fields.List(fields.Nested(requestfile_files)),
+})
+
+
+

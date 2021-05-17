@@ -56,4 +56,8 @@ def add_header(response):
 from .auth import api_rest as auth_api
 api_rest.add_namespace(auth_api)
 
+from .requests import api_rest as requests_api
+api_rest.add_namespace(requests_api)
+
+
 
