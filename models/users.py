@@ -12,10 +12,8 @@ from utils.aws_tools import s3_get_pre_signed, s3_store_images, s3_delete_file
 
 
 UserType = [
-	'security-agent',
 	'client',
-	'security-agency',
-	'gov-agency',
+	'expert',
 ]
 
 
