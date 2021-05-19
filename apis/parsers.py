@@ -15,12 +15,16 @@ LoginParser.add_argument('otp', type=str, help='otp')
 
 RegisterParser = api_rest.parser()
 RegisterParser.add_argument('email', type=inputs.email(), required=True, help='email')
+RegisterParser.add_argument('phone', type=str, required=True, help='phone number')
 RegisterParser.add_argument('password', type=str, required=True, help='password')
 RegisterParser.add_argument('first_name', type=str, required=True, help='first_name')
 RegisterParser.add_argument('last_name', type=str, required=True, help='last_name')
 RegisterParser.add_argument('user_type', type=str, choices=list(UserType), required=True, help='last_name')
 RegisterParser.add_argument('invite_code', type=str, help='invite_code')
 
+
+SMSParser = api_rest.parser()
+SMSParser.add_argument('sms_code', type=int, required=True, help='sms code')
 
 UserParser = api_rest.parser()
 UserParser.add_argument('email', type=inputs.email(), required=True, help='email', location='form')
@@ -31,6 +35,7 @@ UserParser.add_argument('city', type=str, required=True, help='city', location='
 UserParser.add_argument('address', type=str, required=True, help='address', location='form')
 UserParser.add_argument('country', type=str, required=True, help='country', location='form')
 UserParser.add_argument('tz', type=str, required=True, help='timezone', location='form')
+UserParser.add_argument('language', type=str, required=True, help='language', location='form')
 UserParser.add_argument('avatar', type=FileStorage, required=True, help='user image', location='files')
 
 

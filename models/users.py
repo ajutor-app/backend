@@ -40,16 +40,21 @@ class User(db.Model, UserMixin):
 	
 	invite_code = db.Column(db.String(length=250))
 	email_code = db.Column(db.String(length=250))
+	sms_code = db.Column(db.String(length=250))
+
 
 	apiKey = db.Column(db.String(length=255), default=pyotp.random_base32())
 	emailConfirmed = db.Column(db.Boolean, nullable=False, default=False)
 	lastLogin = db.Column(db.String(length=30))
 	userIP = db.Column(db.String(length=30))
+	language_app = db.Column(db.String(length=30), default='english')
 	
 	tz = db.Column(db.String(50), default='UTC', nullable=True)
 	is_admin = db.Column(db.Boolean, default=False)
 	is_disabled = db.Column(db.Boolean, default=False)
 	is_verified = db.Column(db.Boolean, default=False)
+	is_phone_valid = db.Column(db.Boolean, default=False)
+
 
 	user_type = db.Column(Enum(*UserType), default="client", nullable=False)
 
@@ -162,6 +167,7 @@ class User(db.Model, UserMixin):
 				tz=self.tz,
 				avatar=self.get_avatar_url(),
 				is_admin=self.is_admin,
+				language_app=self.language_app,
 				updated_at=self.updated_at,
 				created_at=self.created_at,
 				stats=dict(reviews=self.total_reviews, reads=self.reviews_total_reads, useful=self.total_useful)

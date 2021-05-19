@@ -5,9 +5,9 @@ from flask import Blueprint, current_app, jsonify, json, g, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User
 from .parsers import LoginParser, ChangePasswordParser, ForgotPasswordParser,\
-         ResetPasswordParser, twofaParser, RegisterParser, UserParser
+         ResetPasswordParser, twofaParser, RegisterParser, UserParser, SMSParser
 from models.db import db
-import re, os
+import re, os, random
 from app import limiter
 from .models_api import loginData, user_files
 from datetime import datetime, timedelta
@@ -110,10 +110,13 @@ class Register(Resource):
         if User.check_email(args.get("email")):
             return abort(401, 'email address allready exist')
 
+        sms_code = random.randint(111111,999999)
+
         new_user = User(
             email=args.get("email"),
             password=generate_password_hash(args.get("password")),
             invite_code=args.get("invite_code"),
+            sms_code=sms_code,
         )
         new_user.save()
 
@@ -124,6 +127,31 @@ class Register(Resource):
                     token=new_user.getToken(),
                     data=new_user.to_json()
                 ))
+
+
+@api_rest.route('/validate-phone')
+class ValidateSMSCode(SecureResource):
+    decorators = [limiter.limit("10/minute")]
+
+    @api_rest.doc(parser=SMSParser, model=loginData)
+    def post(self):
+        ''' validate phone number '''
+
+        args = SMSParser.parse_args()
+        user = User.query.get(g.user.id)
+
+        if user.sms_code == args.get('sms_code'):
+            user.sms_code = ""
+            user.is_phone_valid = True
+            user.save()
+
+            return jsonify(dict(
+                    success=True,
+                    token=user.getToken(),
+                    data=user.to_json()
+                ))
+
+        return abort(403, "code not valid")
 
 
 
@@ -200,7 +228,7 @@ class ResetPassword(Resource):
 class logout(SecureResource):
     def get(self):
         """ logout session """
-        return jsonify(dict(success=True)) 
+        return jsonify(dict(success=True))
 
 
 @api_rest.route('/twofa')

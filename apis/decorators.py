@@ -6,6 +6,8 @@ from flask_mail import Mail, Message
 from jinja2 import Environment, BaseLoader
 
 
+exclude_path = ['/apis/auth/validate-phone','/apis/auth/me']
+
 def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -22,10 +24,14 @@ def token_required(f):
             data = jwt.decode(token, app.config["SECRET_KEY"], algorithms="HS256")
             user = User.query.filter_by(id=data['id']).first()
             g.user = user
+            if not user.is_phone_valid and request.path not in exclude_path:
+                raise abort(401, 'please validate phone number')
+
             if user.is_disabled:
                 raise abort(401, 'Account restricted, please contact our support team')
-        except:
-            raise abort(401, 'token is invalid')
+
+        except Exception as error:
+            raise abort(401, str(error))
 
         return f(*args, **kwargs)
     return decorator
