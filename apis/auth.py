@@ -115,7 +115,11 @@ class Register(Resource):
         new_user = User(
             email=args.get("email"),
             password=generate_password_hash(args.get("password")),
-            invite_code=args.get("invite_code"),
+            phone=args.get("phone"),
+            first_name=args.get("first_name"),
+            last_name=args.get("last_name"),
+            city=args.get("city"),
+            country=args.get("country"),
             sms_code=sms_code,
         )
         new_user.save()

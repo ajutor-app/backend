@@ -19,8 +19,8 @@ RegisterParser.add_argument('phone', type=str, required=True, help='phone number
 RegisterParser.add_argument('password', type=str, required=True, help='password')
 RegisterParser.add_argument('first_name', type=str, required=True, help='first_name')
 RegisterParser.add_argument('last_name', type=str, required=True, help='last_name')
-RegisterParser.add_argument('user_type', type=str, choices=list(UserType), required=True, help='last_name')
-RegisterParser.add_argument('invite_code', type=str, help='invite_code')
+RegisterParser.add_argument('city', type=str, required=True, help='city')
+RegisterParser.add_argument('country', type=str, required=True, help='country')
 
 
 SMSParser = api_rest.parser()
