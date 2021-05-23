@@ -138,39 +138,29 @@ class User(db.Model, UserMixin):
 
 	def getToken(self, r_security_login=False):
 		from app import app
-		token = jwt.encode({
-			'id': self.id,
+
+		return str(jwt.encode({'id': self.id,
 			'exp': datetime.utcnow() + timedelta(minutes=1440),
 			'key': r_security_login},
 			app.config['SECRET_KEY'],
 			algorithm="HS256",
-		)
-		return token
-
-	@property
-	def total_reviews(self):
-		return len(self.reviews)
-
-	@property
-	def reviews_total_reads(self):
-		return sum([review.views for review in self.reviews])
-
-	@property
-	def total_useful(self):
-		return len(self.votes)
+		))
 
 	def to_json(self):
 		return dict(
 				id=self.id,
 				email=self.email,
-				full_name=self.full_name,
+				first_name=self.first_name,
+				last_name=self.last_name,
+				city=self.city,
+				address=self.address,
+				country=self.country,
 				tz=self.tz,
 				avatar=self.get_avatar_url(),
 				is_admin=self.is_admin,
 				language_app=self.language_app,
 				updated_at=self.updated_at,
 				created_at=self.created_at,
-				stats=dict(reviews=self.total_reviews, reads=self.reviews_total_reads, useful=self.total_useful)
 			)
 
 

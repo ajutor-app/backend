@@ -39,11 +39,7 @@ class Login(Resource):
                 if not user.check_twoFAKey(args.get('otp')):
                     return abort(401, "otp code is not valid")
 
-            return jsonify(dict(
-                    success=True,
-                    token=user.getToken(),
-                    data=user.to_json(),
-                ))
+            return jsonify(dict(success=True, token=user.getToken(), data=user.to_json()))
 
         return abort(401, 'Wrong username or password')
 
