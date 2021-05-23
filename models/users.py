@@ -139,12 +139,12 @@ class User(db.Model, UserMixin):
 	def getToken(self, r_security_login=False):
 		from app import app
 
-		return str(jwt.encode({'id': self.id,
+		return jwt.encode({'id': self.id,
 			'exp': datetime.utcnow() + timedelta(minutes=1440),
 			'key': r_security_login},
 			app.config['SECRET_KEY'],
 			algorithm="HS256",
-		))
+		).decode("utf-8")
 
 	def to_json(self):
 		return dict(
