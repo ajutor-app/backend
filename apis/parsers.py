@@ -8,7 +8,7 @@ from models import UserType
 
 # /login
 LoginParser = api_rest.parser()
-LoginParser.add_argument('email', type=inputs.email(), required=True, help='email')
+LoginParser.add_argument('username', type=str, required=True, help='username')
 LoginParser.add_argument('password', type=str, required=True, help='password')
 LoginParser.add_argument('otp', type=str, help='otp')
 
@@ -48,11 +48,12 @@ ChangePasswordParser.add_argument('password', type=str, required=True, help='pas
 ChangePasswordParser.add_argument('new_password', type=str, required=True, help='new_password')
 
 ForgotPasswordParser = api_rest.parser()
-ForgotPasswordParser.add_argument('email', type=inputs.email(), required=True, help='email')
+ForgotPasswordParser.add_argument('username', type=str, required=True, help='email')
 
 ResetPasswordParser = api_rest.parser()
-ResetPasswordParser.add_argument('email', type=inputs.email(), required=True, help='email')
-ResetPasswordParser.add_argument('email-code', type=str, required=True, help='email code')
+ResetPasswordParser.add_argument('email', type=inputs.email(), help='email')
+ResetPasswordParser.add_argument('phone', type=str, help='phone')
+ResetPasswordParser.add_argument('code', type=str, required=True, help='email code')
 ResetPasswordParser.add_argument('newpassword', type=str, required=True, help='new password')
 
 

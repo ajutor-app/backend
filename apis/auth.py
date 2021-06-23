@@ -19,6 +19,10 @@ class SecureResource(Resource):
     method_decorators = [token_required]
 
 
+def valid_email(email):
+    return bool(re.search(r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$", email))
+
+
 @api_rest.route('/login')
 class Login(Resource):
     decorators = [limiter.limit("10/minute")]
@@ -28,7 +32,13 @@ class Login(Resource):
         """ login user api """
         args = LoginParser.parse_args()
 
-        user = User.query.filter(User.email==args.get('email')).first()
+        user = None
+
+        if valid_email(args.get('username')):
+            user = User.query.filter(User.email==args.get('username')).first()
+        else:
+            user = User.query.filter(User.phone==args.get('username')).first()
+
         if user and user.verify_password(args.get('password')):
             if user.is_disabled:
                 return abort(401, "Account restricted, please contact us !!!")
@@ -191,7 +201,13 @@ class ForgotPassword(Resource):
     def post(self):
         """ This api need for reset password by email """
         args = ForgotPasswordParser.parse_args()
-        user = User.query.filter_by(email=args.get("email")).first()
+
+        user = None
+        if valid_email(args.get('username')):
+            user = User.query.filter_by(email=args.get("username")).first()
+        else:
+            user = User.query.filter_by(phone=args.get("username")).first()
+
         if user:
             user.reset_email_code()
             # TODO: send email with reset link
@@ -209,9 +225,15 @@ class ResetPassword(Resource):
     @api_rest.doc(parser=ResetPasswordParser)
     def post(self):
         """ This api need for reset password using email code """
+
         args = ResetPasswordParser.parse_args()
-        user = User.query.filter_by(email=args.get("email")).first()
-        if user and user.email_code == args.get("email-code"):
+        user = None
+        if args.get("email"):
+            user = User.query.filter_by(email=args.get("email")).first()
+        if args.get("phone"):
+            user = User.query.filter_by(phone=args.get("phone")).first()
+
+        if user and user.email_code == args.get("code"):
             if len(args.get("newpassword")) < 6:
                 abort(400, "newpassword must have 6+ caracters")
             
